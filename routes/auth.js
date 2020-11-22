@@ -1,31 +1,39 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const config = require('../config');
+// require schema models
+const User = require('../model/userModel');
 
 const { secret } = config;
 
-/** @module auth */
 module.exports = (app, nextMain) => {
-  /**
-   * @name /auth
-   * @description Crea token de autenticación.
-   * @path {POST} /auth
-   * @body {String} email Correo
-   * @body {String} password Contraseña
-   * @response {Object} resp
-   * @response {String} resp.token Token a usar para los requests sucesivos
-   * @code {200} si la autenticación es correcta
-   * @code {400} si no se proveen `email` o `password` o ninguno de los dos
-   * @auth No requiere autenticación
-   */
-  app.post('/auth', (req, resp, next) => {
+  app.post('/auth', (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
       return next(400);
     }
 
-    // TODO: autenticar a la usuarix
-    next();
+    User.findOne({ email }).then((result) => {
+      if (result) {
+        bcrypt.compare(password, result.password, (err, check) => {
+          console.log('estoy en bcrypt compare...', check);
+
+          if (err || !check) {
+            return next(401);
+          }
+        });
+      }
+
+      if (!result) {
+        return next(401);
+      }
+
+      const token = jwt.sign({ uid: result._id }, secret, {
+        expiresIn: '1day',
+      });
+      return res.json({ token });
+    });
   });
 
   return nextMain();

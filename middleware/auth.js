@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../model/userModel');
 
 module.exports = (secret) => (req, resp, next) => {
   const { authorization } = req.headers;
@@ -9,6 +10,7 @@ module.exports = (secret) => (req, resp, next) => {
 
   const [type, token] = authorization.split(' ');
 
+  console.log(authorization, type, token);
   if (type.toLowerCase() !== 'bearer') {
     return next();
   }
@@ -18,35 +20,28 @@ module.exports = (secret) => (req, resp, next) => {
       return next(403);
     }
 
-    // TODO: Verificar identidad del usuario usando `decodeToken.uid`
+    User.findById(decodedToken.uid, (err, result) => {
+      if (err) {
+        return next(401);
+      }
+      req.user = result;
+    });
   });
 };
 
+// if req.user exists
+module.exports.isAuthenticated = (req) => !!req.user._uid;
 
-module.exports.isAuthenticated = (req) => (
-  // TODO: decidir por la informacion del request si la usuaria esta autenticada
-  false
-);
+// if admin rol = true
+module.exports.isAdmin = (req) => !!req.user.roles.admin;
 
+module.exports.requireAuth = (req, resp, next) =>
+  !module.exports.isAuthenticated(req) ? next(401) : next();
 
-module.exports.isAdmin = (req) => (
-  // TODO: decidir por la informacion del request si la usuaria es admin
-  false
-);
-
-
-module.exports.requireAuth = (req, resp, next) => (
-  (!module.exports.isAuthenticated(req))
-    ? next(401)
-    : next()
-);
-
-
-module.exports.requireAdmin = (req, resp, next) => (
+module.exports.requireAdmin = (req, resp, next) =>
   // eslint-disable-next-line no-nested-ternary
-  (!module.exports.isAuthenticated(req))
+  !module.exports.isAuthenticated(req)
     ? next(401)
-    : (!module.exports.isAdmin(req))
-      ? next(403)
-      : next()
-);
+    : !module.exports.isAdmin(req)
+    ? next(403)
+    : next();
