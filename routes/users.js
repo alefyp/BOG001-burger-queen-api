@@ -28,29 +28,30 @@ const initAdminUser = (app, next) => {
 
     if (!result) {
       const admin = new User(adminUser);
-      admin.save().then((doc) => {
+      admin
+        .save()
+        .then((doc) => {
           console.log('admin created!', doc);
           mongoose.connection.close();
         })
         .catch((err) => console.log(err));
     } else {
-      console.log(adminUser.email, 'ya está en mi bd bcryptado y todo kappita');
+      console.log(adminUser.email, 'kappita, it exists!');
     }
   });
 
   next();
 };
 
-
 module.exports = (app, next) => {
   //  app.get('/users', requireAdmin, getUsers);
-  
+
   //  app.get('/users/:uid', requireAuth, (req, resp) => {});
 
   app.post('/users', requireAdmin, (req, resp, next) => {
     console.log(requireAdmin);
   });
-  
+
   app.put('/users/:uid', requireAuth, (req, resp, next) => {});
 
   app.delete('/users/:uid', requireAuth, (req, resp, next) => {});
