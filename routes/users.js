@@ -1,9 +1,12 @@
-const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const { requireAuth, requireAdmin } = require('../middleware/auth');
 const User = require('../model/userModel');
-
-// const { getUsers } = require('../controller/users');
+// require controller
+const {
+  getUsers,
+  addUser,
+} = require('../controller/users');
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
@@ -43,32 +46,10 @@ const initAdminUser = (app, next) => {
 
 module.exports = (app, next) => {
   // app.get('/users', requireAdmin, getUsers); que lo haga todo acá dice xd
-  app.get('/users', requireAdmin, (req, res, next) => {
-    res.json({ holongo: 'si puedo ver esto es porque hice bien la autenticación?' });
-  });
+  app.get('/users', requireAdmin, getUsers);
   //  app.get('/users/:uid', requireAuth, (req, resp) => {});
 
-  app.post('/users', requireAdmin, (req, res, next) => {
-    const { email, password } = req.body;
-
-    User.findOne({ email }, (err, result) => {
-      if (err || result) {
-        return next(403);
-      }
-
-      const user = new User({
-        ...req.body,
-        password: bcrypt.hashSync(password, 10),
-      });
-
-      user.save().then((doc) => {
-        console.log('new user created!', doc);
-        mongoose.connection.close();
-      }).catch((err) => console.log(err));
-
-      return res.json({ note: 'New user created' });
-    });
-  });
+  app.post('/users', requireAdmin, addUser);
 
   // app.put('/users/:uid', requireAuth, (req, resp, next) => {}));
 
