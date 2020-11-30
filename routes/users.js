@@ -42,20 +42,37 @@ const initAdminUser = (app, next) => {
 };
 
 module.exports = (app, next) => {
-  // app.get('/users', requireAdmin, getUsers); que lo haga todo acá dice
+  // app.get('/users', requireAdmin, getUsers); que lo haga todo acá dice xd
   app.get('/users', requireAdmin, (req, res, next) => {
     res.json({ holongo: 'si puedo ver esto es porque hice bien la autenticación?' });
   });
   //  app.get('/users/:uid', requireAuth, (req, resp) => {});
 
   app.post('/users', requireAdmin, (req, res, next) => {
-    // 403 forbidden when token no admin
-    res.json({ note: "Estoy tratando de hacer la auth :c" });
+    const { email, password } = req.body;
+
+    User.findOne({ email }, (err, result) => {
+      if (err || result) {
+        return next(403);
+      }
+
+      const user = new User({
+        ...req.body,
+        password: bcrypt.hashSync(password, 10),
+      });
+
+      user.save().then((doc) => {
+        console.log('new user created!', doc);
+        mongoose.connection.close();
+      }).catch((err) => console.log(err));
+
+      return res.json({ note: 'New user created' });
+    });
   });
 
-  app.put('/users/:uid', requireAuth, (req, resp, next) => {});
+  // app.put('/users/:uid', requireAuth, (req, resp, next) => {}));
 
-  app.delete('/users/:uid', requireAuth, (req, resp, next) => {});
+  // app.delete('/users/:uid', requireAuth, (req, resp, next) => {}));
 
   initAdminUser(app, next);
 };
