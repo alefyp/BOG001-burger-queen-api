@@ -17,7 +17,7 @@ module.exports = (app, nextMain) => {
     User.findOne({ email }).then((result) => {
       if (result) {
         bcrypt.compare(password, result.password, (err, check) => {
-          console.log('estoy en bcrypt compare...', check);
+          console.log('estoy en bcrypt compare...', check, result);
 
           if (err || !check) {
             return next(401);
@@ -32,6 +32,7 @@ module.exports = (app, nextMain) => {
       const token = jwt.sign({ uid: result._id }, secret, {
         expiresIn: '1day',
       });
+      res.set('authorization', token);
       return res.json({ token });
     });
   });

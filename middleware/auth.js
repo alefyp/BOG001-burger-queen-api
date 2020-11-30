@@ -1,16 +1,20 @@
 const jwt = require('jsonwebtoken');
 const User = require('../model/userModel');
 
-module.exports = (secret) => (req, resp, next) => {
+module.exports = (secret) => (req, res, next) => {
   const { authorization } = req.headers;
 
+  console.log(req.headers, authorization, res.body);
+
+  console.log('Estoy en el middleware de auth');
+
   if (!authorization) {
+    console.log('Está entrando de una a no autorizado, am i right?');
     return next();
   }
 
   const [type, token] = authorization.split(' ');
 
-  console.log(authorization, type, token);
   if (type.toLowerCase() !== 'bearer') {
     return next();
   }
@@ -20,28 +24,39 @@ module.exports = (secret) => (req, resp, next) => {
       return next(403);
     }
 
+    console.log(decodedToken);
+
     User.findById(decodedToken.uid, (err, result) => {
       if (err) {
         return next(401);
       }
       req.user = result;
+      next();
     });
   });
 };
 
 // if req.user exists
-module.exports.isAuthenticated = (req) => !!req.user._uid;
+module.exports.isAuthenticated = (req) => {
+  console.log(req.user.email, 'is Authenticated');
+  return !!req.user._id;
+};
 
 // if admin rol = true
-module.exports.isAdmin = (req) => !!req.user.roles.admin;
+module.exports.isAdmin = (req) => {
+  console.log(req.user.email, 'is Admin?', req.user.roles.admin);
+  return !!req.user.roles.admin;
+}
 
-module.exports.requireAuth = (req, resp, next) =>
+// eslint-disable-next-line no-confusing-arrow
+module.exports.requireAuth = (req, res, next) =>
   !module.exports.isAuthenticated(req) ? next(401) : next();
 
-module.exports.requireAdmin = (req, resp, next) =>
+// eslint-disable-next-line no-confusing-arrow
+module.exports.requireAdmin = (req, res, next) =>
   // eslint-disable-next-line no-nested-ternary
   !module.exports.isAuthenticated(req)
     ? next(401)
     : !module.exports.isAdmin(req)
-    ? next(403)
-    : next();
+      ? next(403)
+      : next();

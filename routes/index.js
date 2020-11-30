@@ -35,6 +35,4 @@ module.exports = (app, next) =>
       // products,
       // orders,
       root,
-    ],
-    next
-  );
+    ], next);
