@@ -34,7 +34,7 @@ const initAdminUser = (app, next) => {
       })
         .catch((err) => console.log(err));
     } else {
-      console.log(adminUser.email, 'already initialized!');
+      console.log(adminUser.email, 'already initialized');
     }
   });
 
@@ -44,18 +44,13 @@ const initAdminUser = (app, next) => {
 module.exports = (app, next) => {
   // app.get('/users', requireAdmin, getUsers); que lo haga todo acá dice
   app.get('/users', requireAdmin, (req, res, next) => {
-    console.log(req.headers);
-    console.log(req);
-    console.log(requireAdmin, 'resultado del admin');
     res.json({ holongo: 'si puedo ver esto es porque hice bien la autenticación?' });
   });
   //  app.get('/users/:uid', requireAuth, (req, resp) => {});
 
   app.post('/users', requireAdmin, (req, res, next) => {
-    console.log(requireAdmin);
-    console.log(req);
-    console.log(resp);
-    console.log(req.body);
+    // 403 forbidden when token no admin
+    res.json({ note: "Estoy tratando de hacer la auth :c" });
   });
 
   app.put('/users/:uid', requireAuth, (req, resp, next) => {});

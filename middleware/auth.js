@@ -4,12 +4,7 @@ const User = require('../model/userModel');
 module.exports = (secret) => (req, res, next) => {
   const { authorization } = req.headers;
 
-  console.log(req.headers, authorization, res.body);
-
-  console.log('Estoy en el middleware de auth');
-
   if (!authorization) {
-    console.log('Está entrando de una a no autorizado, am i right?');
     return next();
   }
 
@@ -23,8 +18,6 @@ module.exports = (secret) => (req, res, next) => {
     if (err) {
       return next(403);
     }
-
-    console.log(decodedToken);
 
     User.findById(decodedToken.uid, (err, result) => {
       if (err) {
