@@ -4,7 +4,7 @@ const User = require('../model/userModel');
 
 module.exports = {
   getUsers: (req, res, next) => {
-    res.json({ holongo: 'si puedo ver esto es porque hice bien la autenticación?' });
+    res.json({ holongo: 'holongo' });
   },
 
   addUser: (req, res, next) => {
@@ -12,6 +12,7 @@ module.exports = {
 
     User.findOne({ email }, (err, result) => {
       if (err || result) {
+        console.log(err || 'email already used');
         return next(403);
       }
 
@@ -23,9 +24,8 @@ module.exports = {
       user.save().then((doc) => {
         console.log('new user created!', doc);
         mongoose.connection.close();
-      }).catch((err) => console.log(err));
-
-      return res.json({ note: 'New user created' });
+        return res.json({ note: 'New user created' });
+      }).catch((err) => console.log(err || 'not valid data entry'));
     });
   },
 };
