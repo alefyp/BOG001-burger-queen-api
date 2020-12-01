@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema({
     require: true,
     validate: {
       // prettier-ignore
-      validator: (v) => /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/.test(v),
+      // eslint-disable-next-line no-useless-escape
+      validator: (v) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v),
       message: (email) => `${email.value} is not a a valid email, why!`,
     },
   },

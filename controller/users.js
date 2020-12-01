@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const User = require('../model/userModel');
 
 module.exports = {
+  // GET
   getUsers: (req, res, next) => {
     res.json({ holongo: 'holongo' });
   },
 
+  // POST
   addUser: (req, res, next) => {
     const { email, password } = req.body;
 
@@ -27,5 +29,15 @@ module.exports = {
         return res.json({ note: 'New user created' });
       }).catch((err) => console.log(err || 'not valid data entry'));
     });
+  },
+
+  // PUT
+  editUser: (req, res, next) => {
+    // uid: email or id
+    const { uid } = req.params;
+
+    const filter = { email: uid } || { id: uid };
+
+    res.json({ note: filter });
   },
 };

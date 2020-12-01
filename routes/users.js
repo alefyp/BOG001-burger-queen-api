@@ -6,6 +6,7 @@ const User = require('../model/userModel');
 const {
   getUsers,
   addUser,
+  editUser,
 } = require('../controller/users');
 
 const initAdminUser = (app, next) => {
@@ -51,9 +52,9 @@ module.exports = (app, next) => {
 
   app.post('/users', requireAdmin, addUser);
 
-  // app.put('/users/:uid', requireAuth, (req, resp, next) => {}));
+  app.put('/users/:uid', requireAuth, editUser);
 
-  // app.delete('/users/:uid', requireAuth, (req, resp, next) => {}));
+  app.delete('/users/:uid', requireAuth, (req, resp, next) => {});
 
   initAdminUser(app, next);
 };
