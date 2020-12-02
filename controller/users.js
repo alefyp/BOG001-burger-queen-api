@@ -27,17 +27,16 @@ module.exports = {
         console.log('new user created!', doc);
         mongoose.connection.close();
         return res.json({ note: 'New user created' });
-      }).catch((err) => console.log(err || 'not valid data entry'));
+      }).catch((err) => {
+        console.log(err || 'not valid data entry');
+        return next(403);
+      });
     });
   },
 
   // PUT
   editUser: (req, res, next) => {
     // uid: email or id
-    const { uid } = req.params;
-
-    const filter = { email: uid } || { id: uid };
-
-    res.json({ note: filter });
+    console.log('aquí mando ahorita');
   },
 };
