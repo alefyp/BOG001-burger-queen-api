@@ -7,6 +7,7 @@ const {
   getUsers,
   addUser,
   editUser,
+  deleteUser,
 } = require('../controller/users');
 
 const initAdminUser = (app, next) => {
@@ -52,9 +53,7 @@ module.exports = (app, next) => {
 
   app.put('/users/:uid', requireAuth, editUser);
 
-  app.delete('/users/:uid', requireAuth, (req, res, next) => {
-    // uid: email or id
-  });
+  app.delete('/users/:uid', requireAuth, deleteUser);
 
   initAdminUser(app, next);
 };

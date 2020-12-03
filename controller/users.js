@@ -68,4 +68,24 @@ module.exports = {
       return res.json(doc);
     });
   },
+
+  deleteUser: (req, res, next) => {
+    // uid: email or id
+    const { uid } = req.params;
+    const byEmail = (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/).test(uid);
+    const filter = byEmail ? { email: uid } : { _id: uid };
+
+    // eslint-disable-next-line max-len
+    if (!req.user.roles.admin && uid.localeCompare(req.user._id) !== 0 && uid.localeCompare(req.user.email) !== 0) {
+      return next(403);
+    }
+
+    User.findOneAndRemove(filter, (err, doc) => {
+      if (err) {
+        return next(404);
+      }
+      console.log('deleted user:', doc);
+      return res.json({ note: 'user deleted' });
+    });
+  },
 };
