@@ -50,35 +50,7 @@ module.exports = (app, next) => {
 
   app.post('/users', requireAdmin, addUser);
 
-  app.put('/users/:uid', requireAuth, (req, res, next) => {
-    // getting 500 when no header auth by an error i lost track lmao
-    // it should be 401
-    const { uid } = req.params;
-
-    const update = req.body.password ? {
-      ...req.body,
-      password: bcrypt.hashSync(req.body.password, 10),
-    } : req.body;
-
-    // eslint-disable-next-line no-useless-escape
-    const byEmail = (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/).test(uid);
-    const filter = byEmail ? { email: uid } : { _id: uid };
-
-    // eslint-disable-next-line max-len
-    if (!req.user.roles.admin && uid.localeCompare(req.user._id) !== 0 && uid.localeCompare(req.user.email) !== 0) {
-      return next(403);
-    }
-
-    User.findOneAndUpdate(filter, update, { returnOriginal: false }, (err, doc) => {
-      if (!doc) {
-        return next(403);
-      }
-      // acá me falta estoooooooooooooooooooooooooooooo
-      // una usuaria no admin intenta de modificar sus `roles`, ya sería lo único pendiente u.u
-      console.log('updated!', doc);
-      return res.json(doc);
-    });
-  });
+  app.put('/users/:uid', requireAuth, editUser);
 
   app.delete('/users/:uid', requireAuth, (req, res, next) => {
     // uid: email or id
