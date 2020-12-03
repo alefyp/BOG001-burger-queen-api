@@ -84,6 +84,12 @@ module.exports = {
       if (err) {
         return next(404);
       }
+
+      if (!doc) {
+        console.log('user not found');
+        return next(404);
+      }
+
       console.log('deleted user:', doc);
       return res.json({ note: 'user deleted' });
     });
