@@ -1,13 +1,11 @@
 const auth = require('./auth');
 const users = require('./users');
-// const products = require('./products');
+const products = require('./products');
 // const orders = require('./orders');
 
 const root = (app, next) => {
   const pkg = app.get('pkg');
-  app.get('/', (req, res) =>
-    res.json({ name: pkg.name, version: pkg.version })
-  );
+  app.get('/', (req, res) => res.json({ name: pkg.name, version: pkg.version }));
   app.all('*', (req, resp, nextAll) => nextAll(404));
   return next();
 };
@@ -26,13 +24,13 @@ const register = (app, routes, cb) => {
   });
 };
 
-module.exports = (app, next) =>
-  register(
-    app,
-    [
-      auth,
-      users,
-      // products,
-      // orders,
-      root,
-    ], next);
+module.exports = (app, next) => register(
+  app,
+  [
+    auth,
+    users,
+    products,
+    // orders,
+    root,
+  ], next,
+);

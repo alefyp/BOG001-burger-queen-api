@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 const jwt = require('jsonwebtoken');
 const User = require('../model/userModel');
 
@@ -39,7 +40,7 @@ module.exports.isAuthenticated = (req) => {
 module.exports.isAdmin = (req) => {
   console.log(req.user.email, 'is Admin?', req.user.roles.admin);
   return !!req.user.roles.admin;
-}
+};
 
 // eslint-disable-next-line no-confusing-arrow
 module.exports.requireAuth = (req, res, next) =>

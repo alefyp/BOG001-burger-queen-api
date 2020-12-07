@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+// eslint-disable-next-line import/no-unresolved
 const mongoose = require('mongoose');
 const User = require('../model/userModel');
 
