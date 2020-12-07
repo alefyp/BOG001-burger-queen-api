@@ -4,7 +4,7 @@ const User = require('../model/userModel');
 
 module.exports = {
   // GET
-  getUsers: (req, res, next) => {
+  getUsers: (req, res) => {
     res.json({ holongo: 'holongo' });
   },
 

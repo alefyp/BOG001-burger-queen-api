@@ -10,11 +10,9 @@ const pkg = require('./package.json');
 const { port, dbUrl, secret } = config;
 const app = express();
 
-app.set('config', config); // en users lo uso para traer el mail y password
-
+app.set('config', config);
 app.set('pkg', pkg);
 
-// parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
