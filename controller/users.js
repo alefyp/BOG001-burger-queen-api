@@ -6,7 +6,7 @@ const User = require('../model/userModel');
 
 module.exports = {
   // GET
-  getUsers: (req, res) => {
+  getUsers: (req, res, next) => {
     const { page } = req.query;
     const { limit } = req.query;
 
@@ -26,11 +26,24 @@ module.exports = {
     };
 
     User.paginate({}, options, (err, result) => {
+      if (err) {
+        return next(404);
+      }
       const users = result.usersList.map((e) => {
         const { email, _id, roles } = e;
-        const user = { email, _id, roles };
-        return user;
+        return { email, _id, roles };
       });
+
+      // header parameters
+      const links = {
+        first: `localhost:8080/users?page=1&limit=${result.limit}`,
+        last: `localhost:8080/users?page=${result.totalPages}&limit=${result.limit}`,
+        prev: result.hasPrevPage ? `localhost:8080/users?page=${result.currentPage - 1}&limit=${result.limit}` : null,
+        next: result.hasNextPage ? `localhost:8080/users?page=${result.currentPage + 1}&limit=${result.limit}` : null,
+      };
+
+      // black magic fuckery
+      res.links(links);
       res.json(users);
     });
   },
