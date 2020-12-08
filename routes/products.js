@@ -1,3 +1,4 @@
+
 const {
   requireAuth,
   requireAdmin,
@@ -11,6 +12,7 @@ module.exports = (app, nextMain) => {
   });
 
   app.post('/products', requireAdmin, (req, resp, next) => {
+
   });
 
   app.put('/products/:productId', requireAdmin, (req, resp, next) => {

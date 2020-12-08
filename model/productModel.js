@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-// the unique option is not a validator
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -28,5 +29,5 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-// Saved as 'users' collection with the referred schema
+productSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('Product', productSchema);

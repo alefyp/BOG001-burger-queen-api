@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 // the unique option is not a validator
 const userSchema = new mongoose.Schema({
   email: {
@@ -24,4 +25,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Saved as 'users' collection with the referred schema
+userSchema.plugin(mongoosePaginate);
+
 module.exports = mongoose.model('User', userSchema);

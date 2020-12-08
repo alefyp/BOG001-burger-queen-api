@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { query } = require('express');
 // eslint-disable-next-line import/no-unresolved
 const mongoose = require('mongoose');
 const User = require('../model/userModel');
@@ -6,7 +7,32 @@ const User = require('../model/userModel');
 module.exports = {
   // GET
   getUsers: (req, res) => {
-    res.json({ holongo: 'holongo' });
+    const { page } = req.query;
+    const { limit } = req.query;
+
+    const customLabels = {
+      totalDocs: 'totalUsers',
+      docs: 'usersList',
+      page: 'currentPage',
+      nextPage: 'next',
+      prevPage: 'prev',
+    };
+
+    // eslint-disable-next-line max-len
+    const options = page === undefined || limit === undefined ? { pagination: false, customLabels } : {
+      page,
+      limit,
+      customLabels,
+    };
+
+    User.paginate({}, options, (err, result) => {
+      const users = result.usersList.map((e) => {
+        const { email, _id, roles } = e;
+        const user = { email, _id, roles };
+        return user;
+      });
+      res.json(users);
+    });
   },
 
   // POST
@@ -19,6 +45,8 @@ module.exports = {
         return next(403);
       }
 
+      console.log('estoy en post');
+
       const user = new User({
         ...req.body,
         password: bcrypt.hashSync(password, 10),
@@ -27,7 +55,7 @@ module.exports = {
       user.save().then((doc) => {
         console.log('new user created!', doc);
         mongoose.connection.close();
-        return res.json({ note: 'New user created' });
+        return res.json(doc);
       }).catch((err) => {
         console.log(err || 'not valid data entry');
         return next(403);
