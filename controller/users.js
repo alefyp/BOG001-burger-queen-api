@@ -10,7 +10,7 @@ module.exports = {
   getUsers: (req, res, next) => {
     const { page } = req.query;
     const { limit } = req.query;
-    const fullUrl = req.protocol + '://' + req.get('host');
+    const fullUrl = `${req.protocol}://${req.get('host')}`;
 
     const customLabels = {
       totalDocs: 'totalUsers',
