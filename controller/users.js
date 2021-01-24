@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const { query } = require('express');
 // eslint-disable-next-line import/no-unresolved
 const mongoose = require('mongoose');
+const url = require('url');
 const User = require('../model/userModel');
 
 module.exports = {
@@ -9,6 +10,7 @@ module.exports = {
   getUsers: (req, res, next) => {
     const { page } = req.query;
     const { limit } = req.query;
+    const fullUrl = req.protocol + '://' + req.get('host');
 
     const customLabels = {
       totalDocs: 'totalUsers',
@@ -36,10 +38,10 @@ module.exports = {
 
       // header parameters
       const links = {
-        first: `localhost:8080/users?page=1&limit=${result.limit}`,
-        last: `localhost:8080/users?page=${result.totalPages}&limit=${result.limit}`,
-        prev: result.hasPrevPage ? `localhost:8080/users?page=${result.currentPage - 1}&limit=${result.limit}` : null,
-        next: result.hasNextPage ? `localhost:8080/users?page=${result.currentPage + 1}&limit=${result.limit}` : null,
+        first: `${fullUrl}/users?page=1&limit=${result.limit}`,
+        last: `${fullUrl}/users?page=${result.totalPages}&limit=${result.limit}`,
+        prev: result.hasPrevPage ? `${fullUrl}/users?page=${result.currentPage - 1}&limit=${result.limit}` : null,
+        next: result.hasNextPage ? `${fullUrl}/users?page=${result.currentPage + 1}&limit=${result.limit}` : null,
       };
 
       // black magic fuckery
@@ -57,8 +59,6 @@ module.exports = {
         console.log(err || 'email already used');
         return next(403);
       }
-
-      console.log('estoy en post');
 
       const user = new User({
         ...req.body,
