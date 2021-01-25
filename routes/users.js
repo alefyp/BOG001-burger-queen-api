@@ -12,7 +12,7 @@ const {
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
-
+  console.log(adminEmail);
   // no admin
   if (!adminEmail || !adminPassword) {
     return next();
@@ -23,6 +23,8 @@ const initAdminUser = (app, next) => {
     password: bcrypt.hashSync(adminPassword, 10),
     roles: { admin: true },
   };
+
+  console.log(adminUser.email);
 
   // nothing to do if already exists! but if doesn't... save it!
 

@@ -52,6 +52,10 @@ module.exports = {
   addUser: (req, res, next) => {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return next(401);
+    }
+
     User.findOne({ email }, (err, result) => {
       if (err || result) {
         console.log(err || 'email already used');
@@ -79,6 +83,7 @@ module.exports = {
     // getting 500 when no header auth by an error i lost track lmao
     // it should be 401
     const { uid } = req.params;
+    console.log(uid);
 
     const update = req.body.password ? {
       ...req.body,
@@ -89,6 +94,7 @@ module.exports = {
     const byEmail = (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/).test(uid);
     const filter = byEmail ? { email: uid } : { _id: uid };
 
+    console.log(req.user.email);
     // eslint-disable-next-line max-len
     if (!req.user.roles.admin && uid.localeCompare(req.user._id) !== 0 && uid.localeCompare(req.user.email) !== 0) {
       return next(403);
