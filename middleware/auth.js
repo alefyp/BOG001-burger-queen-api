@@ -15,6 +15,8 @@ module.exports = (secret) => (req, res, next) => {
     return next();
   }
 
+  req.user = null;
+
   jwt.verify(token, secret, (err, decodedToken) => {
     if (err) {
       return next(403);
@@ -25,23 +27,20 @@ module.exports = (secret) => (req, res, next) => {
         return next(401);
       }
 
+      console.log(result);
       req.user = result;
-      next();
+      return next();
     });
   });
-
-  
 };
 
 // if req.user exists
 module.exports.isAuthenticated = (req) => {
-  console.log(req.user.email, 'is Authenticated');
-  return !!req.user._id;
+  return !!req.user;
 };
 
 // if admin rol = true
 module.exports.isAdmin = (req) => {
-  console.log(req.user.email, 'is Admin?', req.user.roles.admin);
   return !!req.user.roles.admin;
 };
 
