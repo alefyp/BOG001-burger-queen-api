@@ -1,8 +1,11 @@
-
 const {
   requireAuth,
   requireAdmin,
 } = require('../middleware/auth');
+
+const {
+  addProduct,
+} = require('../controller/products');
 
 module.exports = (app, nextMain) => {
   app.get('/products', requireAuth, (req, resp, next) => {
@@ -11,9 +14,7 @@ module.exports = (app, nextMain) => {
   app.get('/products/:productId', requireAuth, (req, resp, next) => {
   });
 
-  app.post('/products', requireAdmin, (req, resp, next) => {
-
-  });
+  app.post('/products', requireAdmin, addProduct);
 
   app.put('/products/:productId', requireAdmin, (req, resp, next) => {
   });

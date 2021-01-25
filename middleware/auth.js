@@ -6,13 +6,14 @@ module.exports = (secret) => (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    return next();
+    console.log('No header auth');
+    return next(401);
   }
 
   const [type, token] = authorization.split(' ');
 
   if (type.toLowerCase() !== 'bearer') {
-    return next();
+    return next(401);
   }
 
   jwt.verify(token, secret, (err, decodedToken) => {
