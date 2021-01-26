@@ -6,7 +6,7 @@ _A very nice API._
   - Express
   - MongoDB
 
-To complete this project I learned about routes, URLs, HTTP and REST (verbs, request, response, headers, params, body, status codes), JSON, JWT (JSON Web Tokens), MongoDB, hash functions, environment variables and docker containers.
+To complete this project I learned about routes, URLs, HTTP and REST (verbs, request, response, headers, params, body, status codes, CORS), JSON, JWT (JSON Web Tokens), Express, Middlewares, MongoDB, hash functions/SSH Keys, env variables and docker containers.
 
 ## Install 
 ```
@@ -55,3 +55,7 @@ Environment variables:
 * `DELETE /orders/:orderId`
 
 Full documentation <a href="https://laboratoria.github.io/burger-queen-api/index.html">here</a>.
+
+## Deployment 
+
+`docker-compose up` 
