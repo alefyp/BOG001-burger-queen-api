@@ -11,7 +11,7 @@ _A very nice API._
   - Express
   - MongoDB
 
-To complete this project I learned about routes, URLs, HTTP and REST (verbs, request, response, headers, params, body, status codes), JSON, JWT (JSON Web Tokens), MongoDB, environment variables and docker containers.
+To complete this project I learned about routes, URLs, HTTP and REST (verbs, request, response, headers, params, body, status codes), JSON, JWT (JSON Web Tokens), MongoDB, hash functions, environment variables and docker containers.
 
 ## Install 
 ```
@@ -24,11 +24,6 @@ Environment variables:
   - `JWT_SECRET`: Authentication implements JWT (JSON Web Tokens). In order to sign (encrypt) and verify (decrypt) the tokens, we need a secret.
   - `ADMIN_EMAIL`: Root admin user. `admin@localhost` by default.
   - `ADMIN_PASSOWRD`: Admin user password. 
-
-
-## Features
-  - Auth: admin & users
-  - Orders: add, delete, edit, get 
 
 ## Endpoints
 
