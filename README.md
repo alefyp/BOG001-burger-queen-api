@@ -1,7 +1,7 @@
 # Burger Queen - API
 
 <p align="center">
-  <img width="250" alt="What the hell is this?" src="./BQapi.png" />
+  <img width="250" alt="What the hell is this?" src="https://github.com/alefyp/BOG001-burger-queen-api/blob/dev/Bqapi.png" />
 </p>
 
 _A very nice API._
