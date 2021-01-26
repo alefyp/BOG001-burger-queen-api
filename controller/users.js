@@ -8,7 +8,7 @@ module.exports = {
   getUsers: (req, res, next) => {
     const { page } = req.query;
     const { limit } = req.query;
-    const fullUrl = `${req.protocol}://${req.get('host')}`;
+    const fullUrl = `${req.protocol}://${req.get('host')}${req.route.path}`;
 
     const customLabels = {
       totalDocs: 'totalUsers',
@@ -29,17 +29,14 @@ module.exports = {
       if (err) {
         return next(404);
       }
-      const users = result.usersList.map((e) => {
-        const { email, _id, roles } = e;
-        return { email, _id, roles };
-      });
+      const users = result.usersList.map((e) => e);
 
       // header parameters
       const links = {
-        first: `${fullUrl}/users?page=1&limit=${result.limit}`,
-        last: `${fullUrl}/users?page=${result.totalPages}&limit=${result.limit}`,
-        prev: result.hasPrevPage ? `${fullUrl}/users?page=${result.currentPage - 1}&limit=${result.limit}` : null,
-        next: result.hasNextPage ? `${fullUrl}/users?page=${result.currentPage + 1}&limit=${result.limit}` : null,
+        first: `${fullUrl}?page=1&limit=${result.limit}`,
+        last: `${fullUrl}?page=${result.totalPages}&limit=${result.limit}`,
+        prev: result.hasPrevPage ? `${fullUrl}?page=${result.currentPage - 1}&limit=${result.limit}` : null,
+        next: result.hasNextPage ? `${fullUrl}?page=${result.currentPage + 1}&limit=${result.limit}` : null,
       };
 
       // black magic fuckery
@@ -86,7 +83,6 @@ module.exports = {
     // getting 500 when no header auth by an error i lost track lmao
     // it should be 401
     const { uid } = req.params;
-    console.log(uid);
 
     const update = req.body.password ? {
       ...req.body,
