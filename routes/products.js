@@ -5,22 +5,22 @@ const {
 
 const {
   addProduct,
-  deleteProduct
+  deleteProduct,
+  editProduct,
+  getProduct,
+  getProducts,
 } = require('../controller/products');
 
 module.exports = (app, nextMain) => {
-  app.get('/products', requireAuth, (req, resp, next) => {
-  });
+  app.get('/products', requireAuth, getProducts);
 
-  app.get('/products/:productId', requireAuth, (req, resp, next) => {
-  });
+  app.get('/products/:productId', requireAuth, getProduct);
 
   app.post('/products', requireAdmin, addProduct);
 
-  app.put('/products/:productId', requireAdmin, (req, resp, next) => {
-  });
+  app.put('/products/:productId', requireAdmin, editProduct);
 
-  app.delete('/products/:productId', deleteProduct);
+  app.delete('/products/:productId', requireAdmin, deleteProduct);
 
   nextMain();
 };
