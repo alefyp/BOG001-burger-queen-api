@@ -5,6 +5,7 @@ const {
 
 const {
   addProduct,
+  deleteProduct
 } = require('../controller/products');
 
 module.exports = (app, nextMain) => {
@@ -19,8 +20,7 @@ module.exports = (app, nextMain) => {
   app.put('/products/:productId', requireAdmin, (req, resp, next) => {
   });
 
-  app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
-  });
+  app.delete('/products/:productId', deleteProduct);
 
   nextMain();
 };

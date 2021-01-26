@@ -22,6 +22,7 @@ const productSchema = new mongoose.Schema({
     type: String,
   },
   dateEntry: {
+    required: true,
     type: Date,
   },
 });
