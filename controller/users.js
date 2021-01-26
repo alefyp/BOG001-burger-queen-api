@@ -52,8 +52,15 @@ module.exports = {
   addUser: (req, res, next) => {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return next(401);
+    const user = new User({
+      ...req.body,
+      password: bcrypt.hashSync(password, 10),
+    });
+
+    const error = user.validateSync();
+    if (error) {
+      console.log(error.message, 'bad validation');
+      return next(400);
     }
 
     User.findOne({ email }, (err, result) => {
@@ -62,14 +69,10 @@ module.exports = {
         return next(403);
       }
 
-      const user = new User({
-        ...req.body,
-        password: bcrypt.hashSync(password, 10),
-      });
-
       user.save().then((doc) => {
         console.log('new user created!', doc);
-        mongoose.connection.close();
+        console.log(mongoose.connection.readyState);
+        // mongoose.connection.close();
         return res.json(doc);
       }).catch((err) => {
         console.log(err || 'not valid data entry');

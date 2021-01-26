@@ -4,7 +4,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    require: true,
+    required: true,
     validate: {
       // eslint-disable-next-line no-useless-escape
       validator: (v) => /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(v),
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    require: true,
+    required: true,
     minlength: 6,
   },
   roles: {

@@ -17,8 +17,6 @@ module.exports = (app, nextMain) => {
     User.findOne({ email }).then((result) => {
       if (result) {
         bcrypt.compare(password, result.password, (err, check) => {
-          console.log('estoy en bcrypt compare...', check, result);
-
           if (err || !check) {
             return next(401);
           }

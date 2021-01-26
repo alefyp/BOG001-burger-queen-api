@@ -4,15 +4,14 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    require: true,
+    required: true,
   },
   price: {
     type: Number,
-    require: true,
+    required: true,
   },
   image: {
     type: String,
-    require: true,
     validate: {
       // eslint-disable-next-line no-useless-escape
       validator: (v) => /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(v),
@@ -21,11 +20,9 @@ const productSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    require: true,
   },
   dateEntry: {
     type: Date,
-    require: true,
   },
 });
 

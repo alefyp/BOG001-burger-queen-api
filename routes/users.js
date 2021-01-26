@@ -37,7 +37,8 @@ const initAdminUser = (app, next) => {
       const admin = new User(adminUser);
       admin.save().then((doc) => {
         console.log('admin created!', doc);
-        mongoose.connection.close();
+        console.log(mongoose.connection.readyState);
+        // mongoose.connection.close();
       })
         .catch((err) => console.log(err));
     } else {

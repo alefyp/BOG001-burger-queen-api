@@ -1,25 +1,34 @@
 const mongoose = require('mongoose');
-const User = require('../model/userModel');
+const Product = require('../model/productModel');
 
 module.exports = {
+
+  // POST
   addProduct: (req, res, next) => {
     const {
       name,
       price,
-      image,
-      type,
     } = req.body;
 
-    console.log(req.headers.authorization);
+    req.body.dateEntry = Date.now();
 
-    if (!name || !price) {
-      console.log('No name or price');
+    // Schema verification
+    const product = new Product(req.body);
+    const error = product.validateSync();
+
+    if (error) {
+      console.log(error.message);
       return next(400);
     }
 
-    if (!req.headers.authorization) {
-      console.log('No auth header');
-      return next(401);
-    }
+    product.save().then((doc) => {
+      console.log('new product added!', doc);
+      console.log(mongoose.connection.readyState);
+      // mongoose.connection.close();
+      return res.json(doc);
+    }).catch((err) => {
+      console.log(err.message || 'not valid data entry');
+      return next(403);
+    });
   },
 };
