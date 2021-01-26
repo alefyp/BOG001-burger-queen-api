@@ -26,8 +26,6 @@ module.exports = (secret) => (req, res, next) => {
       if (err) {
         return next(401);
       }
-
-      console.log(result);
       req.user = result;
       return next();
     });
